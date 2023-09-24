@@ -1,9 +1,12 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import toast from "react-hot-toast";
+import { UserContext } from "../context/UserContext";
 const Login = () => {
+  const { setUserInfo } = useContext(UserContext);
+
   const [redirect, setRedirect] = useState(false);
   const {
     register,
@@ -16,10 +19,14 @@ const Login = () => {
       const response = await axios.post("http://localhost:8000/login", data, {
         withCredentials: true,
       });
-      console.log("response: " + response.status);
       if (response.status === 200) {
+        setUserInfo({
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          id: response.data.id,
+        });
         setRedirect(true);
-        toast.success("Login succeeded")
+        toast.success("Login succeeded");
       }
     } catch (error) {
       toast.error("Check your credentials. Try again later.");

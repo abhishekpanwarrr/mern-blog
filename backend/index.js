@@ -72,7 +72,11 @@ app.post("/login", async (req, res) => {
       {},
       (err, token) => {
         if (err) throw new err();
-        res.cookie("token", token).status(200).send("ok");
+        res.cookie("token", token).status(200).send({
+          id:userExists._id,
+          firstName: userExists.firstName,
+          lastName: userExists.lastName,
+        });
       }
     );
   } catch (error) {
@@ -82,7 +86,7 @@ app.post("/login", async (req, res) => {
 app.get("/profile", (req, res) => {
   const { token } = req.cookies;
   jwt.verify(token, "secretpassword", (err, decoded) => {
-    if (err) throw new err();
+    if (err) res.json("Error: " + err.message);
     res.json(decoded);
   });
   res.json(req.cookies);

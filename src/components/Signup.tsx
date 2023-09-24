@@ -10,11 +10,7 @@ const SignUp = () => {
   } = useForm();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async(data: any) => {
-    console.log("data",data);
-    
     const response  = await axios.post("http://localhost:8000/register",data)
-    console.log("response: " + response.data);
-    
   }
 
   return (

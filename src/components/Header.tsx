@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
@@ -12,21 +12,18 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import toast from "react-hot-toast";
-interface User {
-  firstName: string;
-  lastName: string;
-  id: string;
-}
+import { UserContext } from "../context/UserContext";
+
 const Header = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const { userInfo, setUserInfo } = useContext(UserContext);
+
   useEffect(() => {
     (async () => {
       const response = await axios.get("http://localhost:8000/profile", {
         withCredentials: true,
       });
-      console.log("response: " + JSON.stringify(response.data));
       const data = await response.data;
-      setUser(data);
+      setUserInfo(data);
     })();
   }, []);
 
@@ -35,9 +32,8 @@ const Header = () => {
       const response = await axios.post("http://localhost:8000/logout", {
         withCredentials: true,
       });
-      console.log("res", response);
       if (response.status === 200) {
-        setUser(null);
+        setUserInfo(null);
       }
     } catch (error) {
       toast.error(`${error}`);
@@ -49,7 +45,7 @@ const Header = () => {
         BLOG
       </Link>
       <nav className="flex gap-5">
-        {user ? (
+        {userInfo ? (
           <aside className="flex gap-5">
             <button className="bg-[crimson] text-white px-3 py-1 rounded-md">
               Create post
@@ -64,7 +60,7 @@ const Header = () => {
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className=" capitalize">{`${user?.firstName} ${user?.lastName}`}</DropdownMenuItem>
+                <DropdownMenuItem className=" capitalize">{`${userInfo?.firstName} ${userInfo?.lastName}`}</DropdownMenuItem>
                 <DropdownMenuItem
                   className="cursor-pointer"
                   onClick={handleLogout}

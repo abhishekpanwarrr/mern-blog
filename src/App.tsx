@@ -4,10 +4,11 @@ import Login from "./components/Login";
 import SignUp from "./components/Signup";
 import Home from "./components/Home";
 import { Toaster } from "react-hot-toast";
-
+import UserContextProvider from "./context/UserContext";
 function App() {
   return (
     <main className="max-w-7xl mx-auto p-2.5">
+      <UserContextProvider>
       <Header />
       <Routes>
         <Route path="/login" element={<Login />} />
@@ -16,6 +17,7 @@ function App() {
         <Route path="*" element={<h1>Not found</h1>} />
       </Routes>
       <Toaster />
+      </UserContextProvider>
     </main>
   );
 }
