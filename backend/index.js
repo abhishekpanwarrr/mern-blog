@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import User from "./models/user.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import cookieParser from "cookie-parser";
 
 async function connect() {
   try {
@@ -18,12 +19,14 @@ async function connect() {
 
 connect();
 const app = express();
-app.use(cors({
-  credentials:true,
-  origin:"http://localhost:5173"
-}));
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:5173",
+  })
+);
 app.use(express.json());
-
+app.use(cookieParser());
 app.post("/register", async (req, res) => {
   const { email, firstName, lastName, password, company, phone } = req.body;
   const hashedPassword = await bcryptjs.hash(password, 10);
@@ -59,12 +62,32 @@ app.post("/login", async (req, res) => {
     if (!isMatch) {
       res.status(400).send("Invalid password");
     }
-    jwt.sign({ id: userExists._id }, "secretpassword", {}, (err, token) => {
-      if (err) throw new err();
-      res.cookie("token", token).status(200).send("ok");
-    });
+    jwt.sign(
+      {
+        id: userExists._id,
+        firstName: userExists.firstName,
+        lastName: userExists.lastName,
+      },
+      "secretpassword",
+      {},
+      (err, token) => {
+        if (err) throw new err();
+        res.cookie("token", token).status(200).send("ok");
+      }
+    );
   } catch (error) {
     res.status(500).send("Error: " + error.message);
   }
+});
+app.get("/profile", (req, res) => {
+  const { token } = req.cookies;
+  jwt.verify(token, "secretpassword", (err, decoded) => {
+    if (err) throw new err();
+    res.json(decoded);
+  });
+  res.json(req.cookies);
+});
+app.post("/logout", (req, res) => {
+  res.cookie("token", " ").json("ok").status(200);
 });
 app.listen("8000");
