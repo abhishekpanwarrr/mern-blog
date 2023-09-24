@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import Login from "./components/Login";
 import SignUp from "./components/Signup";
 import Home from "./components/Home";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="*" element={<h1>Not found</h1>} />
       </Routes>
+      <Toaster />
     </main>
   );
 }

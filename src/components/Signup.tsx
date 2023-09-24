@@ -12,7 +12,7 @@ const SignUp = () => {
   const onSubmit = async(data: any) => {
     console.log("data",data);
     
-    const response  = await axios.post("http://localhost:8000/",data)
+    const response  = await axios.post("http://localhost:8000/register",data)
     console.log("response: " + response.data);
     
   }
