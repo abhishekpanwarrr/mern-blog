@@ -2,13 +2,11 @@ import { ArrowUpRightSquare } from "lucide-react";
 import { Item } from "./Home";
 import format from "date-fns/format";
 import { Link } from "react-router-dom";
-import { colors, tags } from "../lib/data";
+import { colors } from "../lib/data";
 
 const Post = ({ item }: { item: Item }) => {
-  console.log("item: " + item);
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-5 grid-col gap-5 mb-3 shadow-sm p-3 drop-shadow-sm rounded-md shadow-slate-600">
+    <div className="grid grid-cols-1 md:grid-cols-5 grid-col gap-5 mb-5 shadow-sm p-3 drop-shadow-sm rounded-md shadow-slate-600">
       <div className="col-span-3">
         <img
           className=" h-full w-full object-cover max-h-[400px]"
@@ -27,12 +25,12 @@ const Post = ({ item }: { item: Item }) => {
           {format(new Date(item.createdAt), "dd, MMMM yyyy, HH:mm a")}
         </div>
         <p className="max-h-[310px] overflow-clip capitalize">{item.summary}</p>
-        <div
-          className="content"
+        {/* <div
+          className="content max-h-[100px] overflow-clip"
           dangerouslySetInnerHTML={{ __html: item.content }}
-        />
-        <div className="flex gap-2 mt-auto">
-          {tags.map((tag: string, index: number) => (
+        /> */}
+        <div className="flex gap-2 mt-auto flex-wrap">
+          {item?.tags?.map((tag: string, index: number) => (
             <button
               key={index}
               type="button"

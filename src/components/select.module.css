@@ -63,7 +63,7 @@
   width: 100%;
   left: 0;
   top: calc(100% + 0.25em);
-  background-color: white;
+  background-color: #777;
   z-index: 100;
 }
 

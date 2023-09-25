@@ -34,7 +34,6 @@ app.use(cookieParser());
 app.post("/register", async (req, res) => {
   const { email, firstName, lastName, password, company, phone } = req.body;
   const hashedPassword = await bcryptjs.hash(password, 10);
-  console.log("hashedPassword", hashedPassword);
   try {
     const userExists = await User.findOne({ email });
     if (userExists) {
@@ -62,7 +61,6 @@ app.post("/login", async (req, res) => {
     }
     // Compare password
     const isMatch = await bcryptjs.compare(password, userExists.password);
-    // console.log("isMatch", isMatch);
     if (!isMatch) {
       res.status(400).send("Invalid password");
     }
@@ -100,11 +98,13 @@ app.post("/logout", (req, res) => {
 });
 app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   // res.json(req.file)
+  const tags = JSON.parse(req.body.tags);
   try {
     const newPost = await Post.create({
       title: req.body.title,
       summary: req.body.summary,
       content: req.body.content,
+      tags:tags
     });
 
     res.status(201).send(newPost); 

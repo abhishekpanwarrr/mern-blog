@@ -5,26 +5,27 @@ import "react-quill/dist/quill.snow.css";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Select, SelectOption } from "./Select";
+import toast from "react-hot-toast";
 const options = [
-  { label: "First", value: 1 },
-  { label: "Second", value: 2 },
-  { label: "Third", value: 3 },
-  { label: "Fourth", value: 4 },
-  { label: "Fifth", value: 5 },
-  { label: "Sixth", value: 6 },
-  { label: "Seventh", value: 7 },
-  { label: "Eight", value: 8 },
-  { label: "Nine", value: 9 },
-]
+  { label: "Coding", value: 1 },
+  { label: "React Js", value: 2 },
+  { label: "Next js", value: 3 },
+  { label: "Backend", value: 4 },
+  { label: "Node js", value: 5 },
+  { label: "Python", value: 6 },
+  { label: "Fast api", value: 7 },
+  { label: "HTML", value: 8 },
+  { label: "Css", value: 9 },
+];
+import { useNavigate } from "react-router-dom";
+
 const Create = () => {
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
   const [, setFile] = useState();
-  const [value1, setValue1] = useState<SelectOption[]>([options[0]])
-  console.log("value1",JSON.stringify(value1));
-  
-
+  const [value1, setValue1] = useState<SelectOption[]>([options[0]]);
+  const navigate = useNavigate();
   const titleRef = useRef<HTMLInputElement | null>(null);
   const modules = {
     toolbar: [
@@ -35,31 +36,44 @@ const Create = () => {
       ["clean"],
     ],
   };
+  
   const handleCreatePost = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("tags",value1.map(item => item.label));
+    
     e.preventDefault();
     const data = new FormData();
     data.set("title", title);
     data.set("summary", summary);
     data.set("content", content);
-
+    data.set("tags",JSON.stringify(value1.map(item => item.label)))
+    if (title === "" || summary === "" || content === "") {
+      return toast("Enter the fields!");
+    }
+    console.log("data",data);
+    
     const response = await axios.post("http://localhost:8000/post", data, {
       withCredentials: true,
     });
-    console.log("response: " + response.data);
+    if (response.status === 201) {
+      navigate("/")
+      return toast.success("Post created successfully");
+    } else {
+      return toast.error("Something went wrong");
+    }
   };
   useEffect(() => {
     titleRef?.current?.focus();
   }, []);
   return (
     <form onSubmit={handleCreatePost} className="space-y-4">
-       <>
-      <Select
-        multiple
-        options={options}
-        value={value1}
-        onChange={o => setValue1(o)}
-      />
-    </>
+      <>
+        <Select
+          multiple
+          options={options}
+          value={value1}
+          onChange={(o) => setValue1(o)}
+        />
+      </>
       <Input
         ref={titleRef}
         placeholder="Title of your post"
