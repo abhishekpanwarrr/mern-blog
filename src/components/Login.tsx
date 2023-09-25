@@ -1,13 +1,12 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
 import toast from "react-hot-toast";
 import { UserContext } from "../context/UserContext";
 const Login = () => {
   const { setUserInfo } = useContext(UserContext);
-
-  const [redirect, setRedirect] = useState(false);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -25,7 +24,7 @@ const Login = () => {
           lastName: response.data.lastName,
           id: response.data.id,
         });
-        setRedirect(true);
+        navigate("/");
         toast.success("Login succeeded");
       }
     } catch (error) {
@@ -33,9 +32,6 @@ const Login = () => {
     }
   };
 
-  if (redirect) {
-    return <Navigate to="/" />;
-  }
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -51,8 +47,8 @@ const Login = () => {
             type="email"
             name="email"
             id="floating_email"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-900 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
+            className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none  dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            placeholder=""
             required
           />
           <label
@@ -77,8 +73,8 @@ const Login = () => {
             type="password"
             name="password"
             id="floating_password"
-            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-900 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-            placeholder=" "
+            className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-gray-900 dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+            placeholder=""
             required
           />
           <label
@@ -103,7 +99,7 @@ const Login = () => {
           </div>
           <label
             htmlFor="remember"
-            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            className="ml-2 text-sm font-medium text-white dark:text-gray-300"
           >
             Remember me
           </label>

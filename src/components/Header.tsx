@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useContext, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 import {
@@ -15,17 +15,21 @@ import toast from "react-hot-toast";
 import { UserContext } from "../context/UserContext";
 import { PenSquare, Power } from "lucide-react";
 import Logo from "../assets/logo.png";
+import Cookies from "js-cookie";
 
 const Header = () => {
   const { userInfo, setUserInfo } = useContext(UserContext);
-
+  const [token, setToken] = useState("");
+  const navigate = useNavigate();
   useEffect(() => {
     (async () => {
       const response = await axios.get("http://localhost:8000/profile", {
         withCredentials: true,
       });
       const data = await response.data;
+
       setUserInfo(data);
+      setToken(Cookies.get("token"));
     })();
   }, []);
 
@@ -36,18 +40,21 @@ const Header = () => {
       });
       if (response.status === 200) {
         setUserInfo(null);
+        Cookies.remove("token");
+        navigate("/login");
       }
     } catch (error) {
       toast.error(`${error}`);
     }
   };
+
   return (
     <header className="flex justify-between items-center mb-12">
       <Link className="font-bold" to="/">
         <img src={Logo} alt="" width={70} height={40} />
       </Link>
       <nav className="flex gap-5">
-        {userInfo ? (
+        {token ? (
           <aside className="flex gap-5 items-center justify-center">
             <Link
               to="/create"
