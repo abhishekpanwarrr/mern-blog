@@ -112,4 +112,18 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
     res.status(500).send(error.message);
   }
 });
+
+
+app.get("/posts", async (req, res) => {
+  try {
+    const posts = await Post.find({})
+    if(posts){
+      res.status(200).send(posts)
+    }else{
+      res.status(404).send("Not found")
+    }
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+})
 app.listen("8000");

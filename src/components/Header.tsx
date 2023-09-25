@@ -13,6 +13,8 @@ import {
 } from "./ui/dropdown-menu";
 import toast from "react-hot-toast";
 import { UserContext } from "../context/UserContext";
+import { PenSquare, Power } from "lucide-react";
+import Logo from "../assets/logo.png";
 
 const Header = () => {
   const { userInfo, setUserInfo } = useContext(UserContext);
@@ -42,12 +44,17 @@ const Header = () => {
   return (
     <header className="flex justify-between items-center mb-12">
       <Link className="font-bold" to="/">
-        BLOG
+        <img src={Logo} alt="" width={70} height={40} />
       </Link>
       <nav className="flex gap-5">
         {userInfo ? (
-          <aside className="flex gap-5">
-            <Link to="/create" className="bg-[crimson] text-white px-3 py-1 rounded-md">
+          <aside className="flex gap-5 items-center justify-center">
+            <Link
+              to="/create"
+              className="px-3 py-2 rounded-md flex gap-2"
+              title="Create new post"
+            >
+              <PenSquare />
               Create post
             </Link>
             <DropdownMenu>
@@ -60,11 +67,14 @@ const Header = () => {
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className=" capitalize">{`${userInfo?.firstName} ${userInfo?.lastName}`}</DropdownMenuItem>
+                {userInfo.firstName && userInfo.lastName && (
+                  <DropdownMenuItem className=" capitalize">{`${userInfo?.firstName} ${userInfo?.lastName}`}</DropdownMenuItem>
+                )}
                 <DropdownMenuItem
-                  className="cursor-pointer"
+                  className="cursor-pointer flex gap-2"
                   onClick={handleLogout}
                 >
+                  <Power className="w-5 h-5" />
                   Log Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
