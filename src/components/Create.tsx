@@ -4,12 +4,27 @@ import { Label } from "./ui/label";
 import "react-quill/dist/quill.snow.css";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-
+import { Select, SelectOption } from "./Select";
+const options = [
+  { label: "First", value: 1 },
+  { label: "Second", value: 2 },
+  { label: "Third", value: 3 },
+  { label: "Fourth", value: 4 },
+  { label: "Fifth", value: 5 },
+  { label: "Sixth", value: 6 },
+  { label: "Seventh", value: 7 },
+  { label: "Eight", value: 8 },
+  { label: "Nine", value: 9 },
+]
 const Create = () => {
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
   const [, setFile] = useState();
+  const [value1, setValue1] = useState<SelectOption[]>([options[0]])
+  console.log("value1",JSON.stringify(value1));
+  
+
   const titleRef = useRef<HTMLInputElement | null>(null);
   const modules = {
     toolbar: [
@@ -37,6 +52,14 @@ const Create = () => {
   }, []);
   return (
     <form onSubmit={handleCreatePost} className="space-y-4">
+       <>
+      <Select
+        multiple
+        options={options}
+        value={value1}
+        onChange={o => setValue1(o)}
+      />
+    </>
       <Input
         ref={titleRef}
         placeholder="Title of your post"
