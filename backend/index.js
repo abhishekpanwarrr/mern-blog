@@ -5,6 +5,10 @@ import User from "./models/user.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
+import multer from "multer";
+import Post from "./models/post.js";
+
+const uploadMiddleware = multer({ dest: "uploads/" });
 
 async function connect() {
   try {
@@ -73,7 +77,7 @@ app.post("/login", async (req, res) => {
       (err, token) => {
         if (err) throw new err();
         res.cookie("token", token).status(200).send({
-          id:userExists._id,
+          id: userExists._id,
           firstName: userExists.firstName,
           lastName: userExists.lastName,
         });
@@ -93,5 +97,19 @@ app.get("/profile", (req, res) => {
 });
 app.post("/logout", (req, res) => {
   res.cookie("token", " ").json("ok").status(200);
+});
+app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
+  // res.json(req.file)
+  try {
+    const newPost = await Post.create({
+      title: req.body.title,
+      summary: req.body.summary,
+      content: req.body.content,
+    });
+
+    res.status(201).send(newPost); 
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 app.listen("8000");

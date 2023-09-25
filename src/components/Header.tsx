@@ -47,9 +47,9 @@ const Header = () => {
       <nav className="flex gap-5">
         {userInfo ? (
           <aside className="flex gap-5">
-            <button className="bg-[crimson] text-white px-3 py-1 rounded-md">
+            <Link to="/create" className="bg-[crimson] text-white px-3 py-1 rounded-md">
               Create post
-            </button>
+            </Link>
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar>
