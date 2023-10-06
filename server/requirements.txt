@@ -2,3 +2,9 @@ fastapi
 uvicorn
 pymongo
 certifi
+passlib
+cryptography
+openpyxl
+python-jose
+python-multipart
+bcrypt
