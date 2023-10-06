@@ -9,15 +9,16 @@ export interface Item {
   title: string;
   updatedAt: string;
   __v: number;
-  _id: string;
+  id: string;
   tags: Array<string>;
+  cover?:string
 }
 const Home = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     const getPosts = async () => {
-      const response = await axios.get("http://localhost:8000/posts", {
+      const response = await axios.get("http://localhost:8000/post/all", {
         withCredentials: true,
       });
       setPosts(response.data);
@@ -28,7 +29,7 @@ const Home = () => {
     <>
       {posts && posts.length > 0 ? (
         posts.map((item: Item) => {
-          return <Post key={item._id} item={item} />;
+          return <Post key={item.id} item={item} />;
         })
       ) : (
         <p>Post not found</p>

@@ -1,8 +1,6 @@
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,42 +9,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import toast from "react-hot-toast";
-import { UserContext } from "../context/UserContext";
 import { PenSquare, Power } from "lucide-react";
 import Logo from "../assets/logo.png";
 import Cookies from "js-cookie";
 
 const Header = () => {
-  const { userInfo, setUserInfo } = useContext(UserContext);
-  const [token, setToken] = useState("");
   const navigate = useNavigate();
+  const [token, setToken] = useState<undefined | string>(undefined);
+  const handleLogout = async () => {
+    Cookies.remove("token");
+    navigate("/login");
+  };
+  
   useEffect(() => {
-    (async () => {
-      const response = await axios.get("http://localhost:8000/profile", {
-        withCredentials: true,
-      });
-      const data = await response.data;
-
-      setUserInfo(data);
+    (() => {
       setToken(Cookies.get("token"));
     })();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      const response = await axios.post("http://localhost:8000/logout", {
-        withCredentials: true,
-      });
-      if (response.status === 200) {
-        setUserInfo(null);
-        Cookies.remove("token");
-        navigate("/login");
-      }
-    } catch (error) {
-      toast.error(`${error}`);
-    }
-  };
+  }, [token]);
 
   return (
     <header className="flex justify-between items-center mb-12">
@@ -74,9 +53,9 @@ const Header = () => {
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {userInfo.firstName && userInfo.lastName && (
+                {/* {userInfo?.firstName && userInfo?.lastName && (
                   <DropdownMenuItem className=" capitalize">{`${userInfo?.firstName} ${userInfo?.lastName}`}</DropdownMenuItem>
-                )}
+                )} */}
                 <DropdownMenuItem
                   className="cursor-pointer flex gap-2"
                   onClick={handleLogout}

@@ -23,10 +23,13 @@ const Create = () => {
   const [title, setTitle] = useState("");
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
-  const [, setFile] = useState();
+  const [file, setFile] = useState();
   const [value1, setValue1] = useState<SelectOption[]>([options[0]]);
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
   const titleRef = useRef<HTMLInputElement | null>(null);
+
   const modules = {
     toolbar: [
       [{ size: ["small", false, "large", "huge"] }],
@@ -36,28 +39,56 @@ const Create = () => {
       ["clean"],
     ],
   };
-  
+
   const handleCreatePost = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("tags",value1.map(item => item.label));
-    
     e.preventDefault();
-    const data = new FormData();
-    data.set("title", title);
-    data.set("summary", summary);
-    data.set("content", content);
-    data.set("tags",JSON.stringify(value1.map(item => item.label)))
-    if (title === "" || summary === "" || content === "") {
-      return toast("Enter the fields!");
-    }
-    console.log("data",data);
-    
-    const response = await axios.post("http://localhost:8000/post", data, {
-      withCredentials: true,
-    });
-    if (response.status === 201) {
-      navigate("/")
-      return toast.success("Post created successfully");
-    } else {
+    try {
+      let result;
+      if (file) {
+        setLoading(true);
+        const image = new FormData();
+        image.append("file", file);
+        image.append("upload_preset", "blog_app");
+        image.append("cloud_name", "dircbwq69");
+        const res = await fetch(
+          "https://api.cloudinary.com/v1_1/dircbwq69/image/upload",
+          {
+            method: "POST",
+            body: image,
+          }
+        );
+        result = await res.json();
+      }
+
+      if (title === "" || summary === "" || content === "") {
+        return toast("Enter the fields!");
+      }
+
+      const postData = {
+        title: title,
+        summary: summary,
+        content: content,
+        cover: result?.url || "",
+        tags: value1.map((item) => item.label),
+      };
+
+      const response = await axios.post(
+        "http://localhost:8000/post/create",
+        postData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 201) {
+        setLoading(false);
+        navigate("/");
+        return toast.success("Post created successfully");
+      } else {
+        return toast.error("Something went wrong");
+      }
+    } catch (error) {
+      console.error(error);
       return toast.error("Something went wrong");
     }
   };
@@ -84,7 +115,7 @@ const Create = () => {
       <Input
         placeholder="Description of your post"
         value={summary}
-        minLength={130}
+        minLength={50}
         onChange={(e) => setSummary(e.target.value)}
       />
       <div className="grid w-full max-w-sm items-center gap-1.5">
@@ -92,7 +123,7 @@ const Create = () => {
         <Input
           id="picture"
           type="file"
-          onChange={(e) => setFile(e.target.files)}
+          onChange={(e) => setFile(e.target.files[0])}
         />
       </div>
       <ReactQuill
@@ -104,7 +135,7 @@ const Create = () => {
         className="bg-[crimson] my-4 px-4 py-2 text-white rounded-md w-max-w"
         type="submit"
       >
-        Post
+        {loading ? "Creating...." : "Post"}
       </button>
     </form>
   );

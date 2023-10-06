@@ -1,11 +1,10 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
 import toast from "react-hot-toast";
-import { UserContext } from "../context/UserContext";
+import Cookies from "js-cookie";
+
 const Login = () => {
-  const { setUserInfo } = useContext(UserContext);
   const navigate = useNavigate();
   const {
     register,
@@ -15,15 +14,11 @@ const Login = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = async (data: any) => {
     try {
-      const response = await axios.post("http://localhost:8000/login", data, {
+      const response = await axios.post("http://localhost:8000/auth/login", data, {
         withCredentials: true,
       });
       if (response.status === 200) {
-        setUserInfo({
-          firstName: response.data.firstName,
-          lastName: response.data.lastName,
-          id: response.data.id,
-        });
+        Cookies.set("token", response.data.access_token)
         navigate("/");
         toast.success("Login succeeded");
       }
@@ -86,23 +81,6 @@ const Login = () => {
           {typeof errors.password?.message === "string" && (
             <p className="text-red-700"> {errors?.password?.message ?? ""}</p>
           )}
-        </div>
-        <div className="flex items-start mb-6">
-          <div className="flex items-center h-5">
-            <input
-              id="remember"
-              type="checkbox"
-              value=""
-              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-              required
-            />
-          </div>
-          <label
-            htmlFor="remember"
-            className="ml-2 text-sm font-medium text-white dark:text-gray-300"
-          >
-            Remember me
-          </label>
         </div>
         <button
           type="submit"

@@ -1,6 +1,6 @@
 import { ArrowUpRightSquare } from "lucide-react";
 import { Item } from "./Home";
-import format from "date-fns/format";
+// import format from "date-fns/format";
 import { Link } from "react-router-dom";
 import { colors } from "../lib/data";
 
@@ -9,8 +9,8 @@ const Post = ({ item }: { item: Item }) => {
     <div className="grid grid-cols-1 md:grid-cols-5 grid-col gap-5 mb-5 shadow-sm p-3 drop-shadow-sm rounded-md shadow-slate-600">
       <div className="col-span-3">
         <img
-          className=" h-full w-full object-cover max-h-[400px]"
-          src="https://neilpatel.com/wp-content/uploads/2022/12/Refresh-How-to-Start-a-Blog-That-Makes-You-Money-1.png"
+          className=" h-full w-full object-contain max-h-[400px]"
+          src={item.cover || "https://neilpatel.com/wp-content/uploads/2022/12/Refresh-How-to-Start-a-Blog-That-Makes-You-Money-1.png"}
           alt=""
         />
       </div>
@@ -22,7 +22,7 @@ const Post = ({ item }: { item: Item }) => {
           </Link>
         </div>
         <div className="-mt-3 text-sm">
-          {format(new Date(item.createdAt), "dd, MMMM yyyy, HH:mm a")}
+          {/* {format(new Date(item?.createdAt), "dd, MMMM yyyy, HH:mm a")} */}
         </div>
         <p className="max-h-[310px] overflow-clip capitalize">{item.summary}</p>
         {/* <div

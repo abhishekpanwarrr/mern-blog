@@ -23,7 +23,7 @@ async def get_todos():
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Something went wrong: {str(e)}")
     
 
-@router.post("/create",status_code=status.HTTP_200_OK)
+@router.post("/create",status_code=status.HTTP_201_CREATED)
 async def post_post(post: Post):
     try:
         result = collection.insert_one(dict(post))
