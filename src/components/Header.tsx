@@ -9,18 +9,27 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { PenSquare, Power } from "lucide-react";
+import { Menu, PenSquare, Power } from "lucide-react";
 import Logo from "../assets/logo.png";
 import Cookies from "js-cookie";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../components/ui/sheet";
 
 const Header = () => {
   const navigate = useNavigate();
   const [token, setToken] = useState<undefined | string>(undefined);
+  const [open, setOpen] = useState(false);
   const handleLogout = async () => {
     Cookies.remove("token");
     navigate("/login");
   };
-  
+
   useEffect(() => {
     (() => {
       setToken(Cookies.get("token"));
@@ -72,6 +81,23 @@ const Header = () => {
             <Link to="/signup">Register</Link>
           </>
         )}
+
+        <Sheet>
+          <SheetTrigger onClick={() => setOpen(true)}>
+          <Menu />
+          </SheetTrigger>
+          {open && (
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Are you sure absolutely sure?</SheetTitle>
+                <SheetDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </SheetDescription>
+              </SheetHeader>
+            </SheetContent>
+          )}
+        </Sheet>
       </nav>
     </header>
   );

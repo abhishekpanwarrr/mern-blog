@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { colors } from "../lib/data";
+import { Skeleton } from "../components/ui/skeleton";
 
 interface Post {
   content: string;
@@ -18,8 +19,8 @@ const SinglePost = () => {
   const params = useParams();
 
   useEffect(() => {
-    setLoading(true);
     const getPosts = async () => {
+      setLoading(true);
       const response = await axios.get(
         `http://localhost:8000/post/${params?.id}`,
         {
@@ -34,13 +35,22 @@ const SinglePost = () => {
 
   return (
     <div>
-      {loading && <h1>Loading.....</h1>}
-      {post ? (
+      {loading ? (
+        <div className="flex flex-col gap-6">
+          <Skeleton className="w-full h-[300px] rounded-xl" />
+          <Skeleton className="w-full h-[20px] rounded-full mt-5 mb-3" />
+          <Skeleton className="w-full h-[20px] rounded-full" />
+          <Skeleton className="w-full h-[20px] rounded-full mt-5 mb-3" />
+          <Skeleton className="w-full h-[20px] rounded-full" />
+          <Skeleton className="w-full h-[20px] rounded-full mt-5 mb-3" />
+          <Skeleton className="w-full h-[20px] rounded-full" />
+        </div>
+      ) : post ? (
         <>
           <div className="flex flex-col gap-5 mb-5 shadow-sm p-3 drop-shadow-sm rounded-md shadow-slate-600">
             <div className="">
               <img
-                className=" h-full w-full object-contain max-h-[400px]"
+                className=" h-full w-full object-contain max-h-[600px] min-w-full"
                 src={
                   post.cover ||
                   "https://neilpatel.com/wp-content/uploads/2022/12/Refresh-How-to-Start-a-Blog-That-Makes-You-Money-1.png"
