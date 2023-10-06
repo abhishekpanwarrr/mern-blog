@@ -17,7 +17,7 @@ const Post = ({ item }: { item: Item }) => {
       <div className="col-span-2 flex flex-col gap-4 items-start">
         <div className="w-full flex justify-between items-center my-2 gap-6">
           <h2 className="m-0 text-2xl overflow-clip">{item.title}</h2>
-          <Link to="/" target="_blank" title="Share">
+          <Link to={`/post/${item.id}`} target="_blank" title="Share">
             <ArrowUpRightSquare className="text-gray-500 cursor-pointer w-6 h-6" />
           </Link>
         </div>

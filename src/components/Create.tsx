@@ -88,7 +88,6 @@ const Create = () => {
         return toast.error("Something went wrong");
       }
     } catch (error) {
-      console.error(error);
       return toast.error("Something went wrong");
     }
   };
